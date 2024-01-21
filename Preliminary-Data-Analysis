@@ -1,0 +1,36 @@
+import pandas as pd
+
+
+df = pd.read_sas("nsch_2022e_topical.sas7bdat") 
+df = df.fillna(2)
+
+df
+
+ADD = []
+X = df['K2Q31A'].astype(int)
+print(len(X))
+for num in X:
+    ADD.append(num)
+SCRNT = []
+y = df['SCREENTIME'].astype(int)
+for num in y:
+    SCRNT.append(num)
+
+ADDTIMES = []
+NEUROTTIMES = []
+for i in range(len(ADD)):
+    if (ADD[i] == 1):
+        ADDTIMES.append(SCRNT[i])
+    elif (ADD[i] == 2):
+        NEUROTTIMES.append(SCRNT[i])
+avgADD = sum(ADDTIMES)/len(ADDTIMES)
+avgNEURO = sum(NEUROTTIMES)/len(NEUROTTIMES)
+for j in range(len(NEUROTTIMES)-len(ADDTIMES)):
+    ADDTIMES.append(0)
+
+
+print(avgADD)
+print(avgNEURO)
+ 
+fd = pd.DataFrame(data={"ADHD SCREENTIMES": ADDTIMES, "NEUROTYPICAL SCREENTIMES": NEUROTTIMES})
+fd.to_csv("SCRNT lists.csv", sep=',',index=False)
